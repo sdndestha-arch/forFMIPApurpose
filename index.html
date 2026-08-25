@@ -1,0 +1,35 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="flowers.png" type="image/x-icon">
+    <title>Flowers</title>
+</head>
+<body>
+    <main class="gift-scene">
+        <p class="description">PAKETTT atas nama ibu Kezia FIB UI</p>
+        <input class="envelope-toggle" id="envelopeToggle" type="checkbox">
+        <label class="envelope" for="envelopeToggle" aria-label="Buka amplop hadiah">
+            <span class="envelope__letter">BUKA AKU <br> BUKA AKU</span>
+            <span class="envelope__front"></span>
+            <span class="envelope__flap"></span>
+            <span class="envelope__seal">&#10084;</span>
+        </label>
+        <p class="surprise-message">Buka amplopnya...</p>
+    </main>
+    <script>
+        document.querySelector("#envelopeToggle").addEventListener("change", (event) => {
+            if (event.target.checked) {
+                document.querySelector(".surprise-message").textContent = "Kejutan untukmu...";
+                window.setTimeout(() => {
+                    document.body.classList.add("leaving");
+                    window.setTimeout(() => { window.location.href = "flower.html"; }, 700);
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

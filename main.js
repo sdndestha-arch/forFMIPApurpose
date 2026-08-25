@@ -1,0 +1,123 @@
+window.addEventListener("load", () => {
+        document.body.classList.remove("container");
+
+        const card = document.querySelector(".music-card");
+        const playButton = document.querySelector("#playButton");
+        const music = document.querySelector("#music");
+        const progress = document.querySelector("#progress");
+        const currentTime = document.querySelector("#currentTime");
+        const duration = document.querySelector("#duration");
+        const musicStatus = document.querySelector("#musicStatus");
+        const lyricsToggle = document.querySelector("#lyricsToggle");
+        const lyricsContainer = document.querySelector("#lyrics");
+        const lyrics = [...document.querySelectorAll(".lyrics p")];
+        let activeLyric;
+
+        const startTime = 220;
+        const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${Math.floor(seconds % 60).toString().padStart(2, "0")}`;
+        const updateDuration = () => {
+                if (Number.isFinite(music.duration)) {
+                        progress.max = music.duration;
+                        duration.textContent = formatTime(music.duration);
+                }
+        };
+        const updateLyrics = () => {
+                const nextLyric = lyrics.reduce((active, lyric) => Number(lyric.dataset.time) <= music.currentTime ? lyric : active, lyrics[0]);
+                lyrics.forEach((lyric) => lyric.classList.toggle("active", lyric === nextLyric));
+                if (nextLyric !== activeLyric) {
+                        activeLyric = nextLyric;
+                        const containerRect = lyricsContainer.getBoundingClientRect();
+                        const lyricRect = activeLyric.getBoundingClientRect();
+                        const lyricTop = lyricsContainer.scrollTop + lyricRect.top - containerRect.top;
+                        lyricsContainer.scrollTo({
+                                top: Math.max(0, Math.min(
+                                        lyricTop - lyricsContainer.clientHeight * 0.28,
+                                        lyricsContainer.scrollHeight - lyricsContainer.clientHeight
+                                )),
+                                behavior: "smooth"
+                        });
+                }
+        };
+        const updateState = () => {
+                const isPlaying = !music.paused;
+                card.classList.toggle("is-playing", isPlaying);
+                playButton.textContent = isPlaying ? "Pause" : "Play";
+                playButton.setAttribute("aria-label", isPlaying ? "Jeda musik" : "Putar musik");
+        };
+
+        music.volume = 0.35;
+        music.muted = false;
+
+        fetch("romansa.mp3")
+                .then((response) => {
+                        if (!response.ok) throw new Error("Audio tidak ditemukan");
+                        return response.blob();
+                })
+                .then((audioBlob) => {
+                        music.src = URL.createObjectURL(audioBlob);
+                        music.load();
+                })
+                .catch(() => { musicStatus.textContent = "File audio tidak dapat dimuat."; });
+
+        playButton.addEventListener("click", () => {
+                if (music.paused) {
+                        seekToStart();
+                        music.play().then(() => { musicStatus.textContent = "Audio aktif."; }).catch(() => { musicStatus.textContent = "Browser memblokir autoplay. Klik Play lagi."; });
+                } else {
+                        music.pause();
+                }
+        });
+        const seekToStart = () => {
+                if (music.readyState >= 2 && music.duration > startTime) {
+                        music.currentTime = startTime;
+                        progress.value = startTime;
+                        currentTime.textContent = formatTime(startTime);
+                }
+        };
+        music.addEventListener("loadedmetadata", () => {
+                seekToStart();
+                updateDuration();
+                music.play().then(() => {
+                        seekToStart();
+                        musicStatus.textContent = "Klik Suara untuk menyalakan audio.";
+                        updateState();
+                }).catch(() => { musicStatus.textContent = "Izinkan musik untuk mulai memutar audio."; });
+        });
+        music.addEventListener("durationchange", updateDuration);
+        music.addEventListener("loadeddata", updateDuration);
+        music.addEventListener("canplay", seekToStart, { once: true });
+        music.addEventListener("canplaythrough", seekToStart, { once: true });
+        music.addEventListener("play", () => {
+                if (music.currentTime < startTime) seekToStart();
+        });
+        window.setInterval(() => {
+                if (music.readyState >= 2 && music.duration > startTime && music.currentTime < startTime) seekToStart();
+        }, 100);
+        music.addEventListener("timeupdate", () => {
+                if (music.currentTime < startTime && music.duration > startTime) seekToStart();
+                updateDuration();
+                progress.value = music.currentTime;
+                currentTime.textContent = formatTime(music.currentTime);
+                updateLyrics();
+        });
+        music.addEventListener("ended", () => {
+                music.currentTime = startTime;
+                music.play().catch(() => { musicStatus.textContent = "Tekan Suara untuk memulai audio."; });
+        });
+        music.addEventListener("play", updateState);
+        music.addEventListener("pause", updateState);
+        progress.addEventListener("input", () => { music.currentTime = Number(progress.value); });
+        lyricsToggle.addEventListener("click", () => {
+                const isHidden = document.querySelector("#lyrics").classList.toggle("is-hidden");
+                lyricsToggle.textContent = isHidden ? "Tampilkan lirik" : "Sembunyikan lirik";
+                lyricsToggle.setAttribute("aria-expanded", String(!isHidden));
+        });
+
+        if (music.readyState >= 1) {
+                seekToStart();
+                updateDuration();
+                music.play().then(seekToStart).catch(() => {
+                        musicStatus.textContent = "Klik Mulai musik untuk memulai audio.";
+                });
+        }
+});
