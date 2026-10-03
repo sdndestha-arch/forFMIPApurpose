@@ -11,9 +11,11 @@ window.addEventListener("load", () => {
         const lyricsToggle = document.querySelector("#lyricsToggle");
         const lyricsContainer = document.querySelector("#lyrics");
         const lyrics = [...document.querySelectorAll(".lyrics p")];
+        const startTime = 124.78;
+        const lyricSpeed = 1;
+        const firstLyricTime = Number(lyrics[0]?.dataset.time);
         let activeLyric;
 
-        const startTime = 220;
         const formatTime = (seconds) => `${Math.floor(seconds / 60)}:${Math.floor(seconds % 60).toString().padStart(2, "0")}`;
         const updateDuration = () => {
                 if (Number.isFinite(music.duration)) {
@@ -22,7 +24,16 @@ window.addEventListener("load", () => {
                 }
         };
         const updateLyrics = () => {
-                const nextLyric = lyrics.reduce((active, lyric) => Number(lyric.dataset.time) <= music.currentTime ? lyric : active, lyrics[0]);
+                const lyricTime = firstLyricTime + (music.currentTime - firstLyricTime) * lyricSpeed;
+                if (lyricTime < firstLyricTime) {
+                        lyrics.forEach((lyric) => lyric.classList.remove("active"));
+                        activeLyric = undefined;
+                        return;
+                }
+                const nextLyric = lyrics.reduce((active, lyric) => {
+                        const cueTime = Number(lyric.dataset.time) + Number(lyric.dataset.lag || 0) * lyricSpeed;
+                        return cueTime <= lyricTime ? lyric : active;
+                }, lyrics[0]);
                 lyrics.forEach((lyric) => lyric.classList.toggle("active", lyric === nextLyric));
                 if (nextLyric !== activeLyric) {
                         activeLyric = nextLyric;
@@ -48,7 +59,7 @@ window.addEventListener("load", () => {
         music.volume = 0.35;
         music.muted = false;
 
-        fetch("romansa.mp3")
+        fetch("wave to earth - ride.mp3")
                 .then((response) => {
                         if (!response.ok) throw new Error("Audio tidak ditemukan");
                         return response.blob();

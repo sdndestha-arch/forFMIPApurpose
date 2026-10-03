@@ -1078,12 +1078,16 @@ body {
           animation: leaf-ans-3 3s linear infinite;
 }
 
-.music-card {
+.music-stack {
   position: fixed;
   right: 3vmin;
   bottom: 3vmin;
   z-index: 200;
   width: min(350px, calc(100vw - 6vmin));
+}
+.music-card {
+  position: relative;
+  width: 100%;
   padding: 16px;
   color: #fff;
   border: 1px solid rgba(255, 193, 223, .5);
@@ -1092,6 +1096,15 @@ body {
   box-shadow: 0 12px 35px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .25);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+}
+.music-wish {
+  margin: 12px 8px 0;
+  color: #ffd6e9;
+  font-family: Georgia, serif;
+  font-size: .88rem;
+  line-height: 1.4;
+  text-align: center;
+  text-shadow: 0 1px 10px rgba(255, 143, 199, .35);
 }
 .spotify-player {
   display: block;
@@ -1197,10 +1210,13 @@ body {
 }
 .lyrics p {
   margin: 0;
+  opacity: .55;
+  transition: color .45s ease, opacity .45s ease;
 }
 .lyrics p.active {
   color: #ffb0d4;
   font-weight: 700;
+  opacity: 1;
 }
 .lyrics p.lyrics__intro {
   color: #ffb0d4;
@@ -1220,21 +1236,21 @@ body {
 @keyframes music-spin {
   to { transform: rotate(360deg); }
 }
-@media screen and (max-width: 574px) {
-  .music-card {
-    right: 12px;
-    bottom: 12px;
-    width: min(350px, calc(100vw - 24px));
-  }
-}
 @media screen and (max-width: 700px) {
-  .music-card {
+  .music-stack {
     right: auto;
     left: 50%;
     top: 6vh;
     bottom: auto;
-    width: min(320px, calc(100vw - 32px));
+    width: min(300px, calc(100vw - 40px));
     transform: translateX(-50%);
+  }
+  .music-card {
+    padding: 14px;
+  }
+  .music-card__cover {
+    width: 48px;
+    height: 48px;
   }
 }
 
