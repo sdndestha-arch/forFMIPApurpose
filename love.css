@@ -30,8 +30,7 @@
     text-shadow: 0 0 16px rgba(255, 87, 170, .7);
     animation: love-heart-fall var(--duration) linear var(--delay) both;
 }
-.love-transition__heart:nth-child(3n){ color: #ffd0e6; }
-.love-transition__heart:nth-child(3n + 1){ color: #f65da8; }
+.love-transition__heart:nth-child(2n){ color: #a8d4a2; }
 .love-transition__message{
     position: relative;
     z-index: 1;
