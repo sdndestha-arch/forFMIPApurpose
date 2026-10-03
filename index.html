@@ -26,27 +26,13 @@
         </label>
         <p class="surprise-message">Buka amplopnya...</p>
     </main>
-    <audio id="sharedMusic" src="wave to earth - ride.mp3" preload="auto" playsinline webkit-playsinline></audio>
-    <iframe class="flower-experience" id="flowerExperience" title="Hadiah bunga dan musik" allow="autoplay" aria-hidden="true"></iframe>
     <script>
-        const sharedMusic = document.querySelector("#sharedMusic");
-        const flowerExperience = document.querySelector("#flowerExperience");
-        sharedMusic.volume = 0.35;
-
         document.querySelector("#envelopeToggle").addEventListener("change", (event) => {
             if (event.target.checked) {
                 document.querySelector(".surprise-message").textContent = "Kejutan untukmu...";
-                sharedMusic.play().catch(() => {});
                 window.setTimeout(() => {
                     document.body.classList.add("leaving");
-                    window.setTimeout(() => {
-                        document.querySelector(".gift-scene").hidden = true;
-                        document.querySelector(".background-florals").hidden = true;
-                        flowerExperience.src = "flower.html";
-                        flowerExperience.setAttribute("aria-hidden", "false");
-                        flowerExperience.classList.add("is-active");
-                        document.body.classList.remove("leaving");
-                    }, 700);
+                    window.setTimeout(() => { window.location.href = "flower.html"; }, 700);
                 }, 3000);
             }
         });
