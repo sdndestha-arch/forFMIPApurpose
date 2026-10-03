@@ -3,7 +3,9 @@ window.addEventListener("load", () => {
 
         const card = document.querySelector(".music-card");
         const playButton = document.querySelector("#playButton");
-        const music = document.querySelector("#music");
+        const music = window.parent === window
+                ? document.querySelector("#music")
+                : window.parent.document.querySelector("#sharedMusic");
         const progress = document.querySelector("#progress");
         const currentTime = document.querySelector("#currentTime");
         const duration = document.querySelector("#duration");
@@ -60,16 +62,11 @@ window.addEventListener("load", () => {
         music.volume = 0.35;
         music.muted = false;
 
-        fetch("wave to earth - ride.mp3")
-                .then((response) => {
-                        if (!response.ok) throw new Error("Audio tidak ditemukan");
-                        return response.blob();
-                })
-                .then((audioBlob) => {
-                        music.src = URL.createObjectURL(audioBlob);
-                        music.load();
-                })
-                .catch(() => { musicStatus.textContent = "File audio tidak dapat dimuat."; });
+        if (window.parent === window) {
+                music.src = "wave to earth - ride.mp3";
+                music.preload = "auto";
+                music.load();
+        }
 
         playButton.addEventListener("click", () => {
                 if (music.paused) {
@@ -137,7 +134,7 @@ window.addEventListener("load", () => {
                 document.body.classList.add("is-transitioning");
                 transition.classList.add("is-active");
                 transition.setAttribute("aria-hidden", "false");
-                window.setTimeout(() => { window.location.href = "love.html"; }, 3200);
+                window.setTimeout(() => { window.top.location.href = "love.html"; }, 3200);
         });
         music.addEventListener("play", () => {
                 musicStartPrompt.hidden = true;
