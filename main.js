@@ -127,6 +127,7 @@ window.addEventListener("load", () => {
                         heartField.appendChild(heart);
                 }
 
+                document.body.classList.add("is-transitioning");
                 transition.classList.add("is-active");
                 transition.setAttribute("aria-hidden", "false");
                 window.setTimeout(() => { window.location.href = "love.html"; }, 3200);
