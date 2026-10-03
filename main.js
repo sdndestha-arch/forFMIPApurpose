@@ -121,8 +121,8 @@ window.addEventListener("load", () => {
                         heart.textContent = "\u2665";
                         heart.style.setProperty("--left", `${Math.random() * 100}%`);
                         heart.style.setProperty("--size", `${18 + Math.random() * 34}px`);
-                        heart.style.setProperty("--duration", `${2.2 + Math.random() * 1.4}s`);
-                        heart.style.setProperty("--delay", `${-Math.random() * 2.5}s`);
+                        heart.style.setProperty("--duration", `${2.1 + Math.random() * 0.8}s`);
+                        heart.style.setProperty("--delay", `${Math.random() * 0.25}s`);
                         heart.style.setProperty("--drift", `${-60 + Math.random() * 120}px`);
                         heartField.appendChild(heart);
                 }

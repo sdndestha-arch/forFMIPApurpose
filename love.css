@@ -22,13 +22,13 @@
 }
 .love-transition__heart{
     position: absolute;
-    bottom: -12vh;
+    top: -12vh;
     left: var(--left);
     color: #ff80bd;
     font-size: var(--size);
     line-height: 1;
     text-shadow: 0 0 16px rgba(255, 87, 170, .7);
-    animation: love-heart-rise var(--duration) linear var(--delay) both;
+    animation: love-heart-fall var(--duration) linear var(--delay) both;
 }
 .love-transition__heart:nth-child(3n){ color: #ffd0e6; }
 .love-transition__heart:nth-child(3n + 1){ color: #f65da8; }
@@ -97,10 +97,10 @@
 .love-message__restart:hover{
     color: #fff;
 }
-@keyframes love-heart-rise{
+@keyframes love-heart-fall{
     0%{ opacity: 0; transform: translate3d(0, 0, 0) rotate(-16deg) scale(.4); }
     16%{ opacity: 1; }
-    100%{ opacity: 0; transform: translate3d(var(--drift), -125vh, 0) rotate(32deg) scale(1.2); }
+    100%{ opacity: 0; transform: translate3d(var(--drift), 125vh, 0) rotate(32deg) scale(1.2); }
 }
 @keyframes love-message-in{
     from{ opacity: 0; transform: translateY(14px); }
