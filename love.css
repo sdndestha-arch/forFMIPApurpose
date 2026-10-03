@@ -62,11 +62,12 @@
 }
 .love-message__hearts{
     margin-bottom: 18px;
-    color: #ff87bc;
     font-size: 24px;
     letter-spacing: 12px;
     animation: love-heart-glow 1.8s ease-in-out infinite alternate;
 }
+.love-message__heart--green{ color: #a8d4a2; }
+.love-message__heart--pink{ color: #ff87bc; }
 .love-message h1{
     margin: 0;
     color: #ffe0ef;
