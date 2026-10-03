@@ -112,8 +112,24 @@ window.addEventListener("load", () => {
                 updateLyrics();
         });
         music.addEventListener("ended", () => {
-                music.currentTime = startTime;
-                music.play().catch(() => { musicStatus.textContent = "Tekan Suara untuk memulai audio."; });
+                const transition = document.querySelector("#loveTransition");
+                const heartField = transition.querySelector(".love-transition__hearts");
+
+                for (let index = 0; index < 48; index += 1) {
+                        const heart = document.createElement("span");
+                        heart.className = "love-transition__heart";
+                        heart.textContent = "\u2665";
+                        heart.style.setProperty("--left", `${Math.random() * 100}%`);
+                        heart.style.setProperty("--size", `${18 + Math.random() * 34}px`);
+                        heart.style.setProperty("--duration", `${2.2 + Math.random() * 1.4}s`);
+                        heart.style.setProperty("--delay", `${-Math.random() * 2.5}s`);
+                        heart.style.setProperty("--drift", `${-60 + Math.random() * 120}px`);
+                        heartField.appendChild(heart);
+                }
+
+                transition.classList.add("is-active");
+                transition.setAttribute("aria-hidden", "false");
+                window.setTimeout(() => { window.location.href = "love.html"; }, 3200);
         });
         music.addEventListener("play", updateState);
         music.addEventListener("pause", updateState);
