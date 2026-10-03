@@ -41,6 +41,25 @@
     filter: blur(10px);
     pointer-events: none;
 }
+.music-start-prompt{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 218, 236, .8);
+    border-radius: 999px;
+    color: #fff8fc;
+    background: #b84d83;
+    box-shadow: 0 8px 28px rgba(241, 89, 163, .3);
+    font-family: Georgia, serif;
+    font-size: 14px;
+    cursor: pointer;
+    animation: music-prompt-in .45s ease both, music-prompt-pulse 1.8s .45s ease-in-out infinite alternate;
+}
+.music-start-prompt[hidden]{ display: none; }
 .love-transition__message{
     position: relative;
     z-index: 1;
@@ -119,6 +138,14 @@
     from{ opacity: .7; transform: scale(.96); }
     to{ opacity: 1; transform: scale(1.04); }
 }
+@keyframes music-prompt-in{
+    from{ opacity: 0; transform: translateY(12px) scale(.96); }
+    to{ opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes music-prompt-pulse{
+    from{ box-shadow: 0 8px 24px rgba(241, 89, 163, .24); }
+    to{ box-shadow: 0 10px 34px rgba(241, 89, 163, .48); }
+}
 @media (max-width: 480px){
     .love-message h1{ font-size: 32px; }
     .love-message__body{ font-size: 16px; }
@@ -128,7 +155,8 @@
     .love-transition__heart,
     .love-message,
     .love-message__hearts,
-    .love-transition__message{
+    .love-transition__message,
+    .music-start-prompt{
         animation-duration: .01ms;
         animation-iteration-count: 1;
     }

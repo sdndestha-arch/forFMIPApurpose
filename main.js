@@ -8,6 +8,7 @@ window.addEventListener("load", () => {
         const currentTime = document.querySelector("#currentTime");
         const duration = document.querySelector("#duration");
         const musicStatus = document.querySelector("#musicStatus");
+        const musicStartPrompt = document.querySelector("#musicStartPrompt");
         const lyricsToggle = document.querySelector("#lyricsToggle");
         const lyricsContainer = document.querySelector("#lyrics");
         const lyrics = [...document.querySelectorAll(".lyrics p")];
@@ -72,8 +73,7 @@ window.addEventListener("load", () => {
 
         playButton.addEventListener("click", () => {
                 if (music.paused) {
-                        seekToStart();
-                        music.play().then(() => { musicStatus.textContent = "Audio aktif."; }).catch(() => { musicStatus.textContent = "Browser memblokir autoplay. Klik Play lagi."; });
+                        startMusic();
                 } else {
                         music.pause();
                 }
@@ -85,14 +85,21 @@ window.addEventListener("load", () => {
                         currentTime.textContent = formatTime(startTime);
                 }
         };
-        music.addEventListener("loadedmetadata", () => {
+        const startMusic = () => {
                 seekToStart();
-                updateDuration();
                 music.play().then(() => {
-                        seekToStart();
-                        musicStatus.textContent = "Klik Suara untuk menyalakan audio.";
+                        musicStatus.textContent = "Audio aktif.";
+                        musicStartPrompt.hidden = true;
                         updateState();
-                }).catch(() => { musicStatus.textContent = "Izinkan musik untuk mulai memutar audio."; });
+                }).catch(() => {
+                        musicStatus.textContent = "Browser memblokir autoplay. Sentuh tombol untuk memutar.";
+                        musicStartPrompt.hidden = false;
+                });
+        };
+        musicStartPrompt.addEventListener("click", startMusic);
+        music.addEventListener("loadedmetadata", () => {
+                updateDuration();
+                startMusic();
         });
         music.addEventListener("durationchange", updateDuration);
         music.addEventListener("loadeddata", updateDuration);
@@ -132,7 +139,10 @@ window.addEventListener("load", () => {
                 transition.setAttribute("aria-hidden", "false");
                 window.setTimeout(() => { window.location.href = "love.html"; }, 3200);
         });
-        music.addEventListener("play", updateState);
+        music.addEventListener("play", () => {
+                musicStartPrompt.hidden = true;
+                updateState();
+        });
         music.addEventListener("pause", updateState);
         progress.addEventListener("input", () => { music.currentTime = Number(progress.value); });
         lyricsToggle.addEventListener("click", () => {
@@ -142,10 +152,7 @@ window.addEventListener("load", () => {
         });
 
         if (music.readyState >= 1) {
-                seekToStart();
                 updateDuration();
-                music.play().then(seekToStart).catch(() => {
-                        musicStatus.textContent = "Klik Mulai musik untuk memulai audio.";
-                });
+                startMusic();
         }
 });
